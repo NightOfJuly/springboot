@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qindy.dao.UserDao">
+    <resultMap id="UserResultMap" type="com.qindy.entity.User">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="login_name" property="loginName" />
+        <result column="password" property="password" />
+        <collection property="roles" ofType="com.qindy.entity.SysRole">
+            <result column="role_name" property="name"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="findById" resultMap="UserResultMap" parameterType="java.lang.String">
+        select
+            name,email,phone
+        from sys_user
+        where id=#{id}
+    </select>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT
+          name,email,phone
+        FROM sys_user
+    </select>
+
+    <select id="findByName" resultMap="UserResultMap" parameterType="String">
+        SELECT  u.id,u.name,u.login_name,u.email,u.password,u.phone,r.role_name
+        FROM sys_user u
+        LEFT JOIN sys_user_role sur ON u.id = sur.user_id
+        LEFT JOIN sys_role r ON sur.role_id = r.id
+        WHERE u.login_name = #{loginName}
+    </select>
+</mapper>
